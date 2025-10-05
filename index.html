@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexora Portal</title>
+<style>
+  /* Basic reset */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html, body {
+    width: 100%; height: 100%;
+    background: black;
+    color: white;
+    font-family: 'Helvetica Neue', sans-serif;
+    overflow: hidden;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: background 2s ease;
+  }
+
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  #countdown {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+
+  #secretButton {
+    display: none;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    border: 2px solid white;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.5s all;
+  }
+
+  #secretButton:hover {
+    background: white;
+    color: black;
+  }
+</style>
+</head>
+<body>
+
+<h1 id="phaseText">The Portal Awakens...</h1>
+<p id="description">Something eternal is coming.</p>
+<div id="countdown"></div>
+<button id="secretButton">Pre-Order Now</button>
+
+<script>
+  // -------------------------------
+  // CONFIGURATION
+  // -------------------------------
+  const startDate = new Date('2025-10-15T00:00:00'); // start of phase reveals
+  const preOrderDate = new Date('2025-10-20T00:00:00'); // pre-order unlock
+  const launchDate = new Date('2025-11-01T00:00:00'); // full launch
+  const totalPhases = Math.ceil((launchDate - startDate) / (1000*60*60*24)); // number of days/phases
+
+  const phaseTexts = [
+    "The Portal Awakens...",
+    "A faint glow emerges.",
+    "Shadows start to shift.",
+    "You can sense something beyond.",
+    "Fragments of the Gate appear.",
+    "Petals start to fall.",
+    "The Torii forms in the mist.",
+    "A faint light pierces the darkness.",
+    "The Portal hums.",
+    "Prepare yourself."
+    // You can extend or modify phases for X days
+  ];
+
+  // -------------------------------
+  // HELPER FUNCTIONS
+  // -------------------------------
+  function getPhase(today) {
+    const diffTime = today - startDate;
+    const diffDays = Math.floor(diffTime / (1000*60*60*24));
+    return Math.min(diffDays, phaseTexts.length-1);
+  }
+
+  function updateCountdown() {
+    const now = new Date();
+    const distance = launchDate - now;
+
+    if (distance <= 0) {
+      document.getElementById("countdown").innerHTML = "The Portal is Open!";
+      document.getElementById("phaseText").innerHTML = "WELCOME TO NEXORA";
+      document.getElementById("description").innerHTML = "Explore the eternal realm.";
+      document.getElementById("secretButton").style.display = "none";
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    document.getElementById("countdown").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  function revealPhase() {
+    const today = new Date();
+    const phaseIndex = getPhase(today);
+    
+    // update text
+    const phaseTextEl = document.getElementById("phaseText");
+    const descEl = document.getElementById("description");
+
+    phaseTextEl.innerHTML = phaseTexts[phaseIndex];
+    descEl.innerHTML = "Something eternal is coming.";
+
+    // fade in
+    setTimeout(() => { phaseTextEl.style.opacity = 1; descEl.style.opacity = 1; }, 500);
+
+    // pre-order button reveal
+    if(today >= preOrderDate) {
+      document.getElementById("secretButton").style.display = "inline-block";
+    }
+  }
+
+  // -------------------------------
+  // INIT
+  // -------------------------------
+  revealPhase();
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // secret button click (example)
+  document.getElementById("secretButton").addEventListener('click', () => {
+    alert("Pre-orders are now open!"); // replace with your pre-order link
+  });
+
+</script>
+
+</body>
+</html>
